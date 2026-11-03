@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unclaimed — a night at the lost property office</title>
+<meta name="description" content="A short interactive story. One rainy night as the clerk of a tiny railway station's lost property office. Every object remembers something. Three endings, about ten minutes.">
+<meta property="og:title" content="Unclaimed">
+<meta property="og:description" content="One rainy night at a railway lost property office. Every object remembers something. Three endings.">
+<meta property="og:image" content="img/00-office.jpg">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23173236'/><circle cx='16' cy='13' r='6' fill='%23e8a54b'/><rect x='9' y='22' width='14' height='3' fill='%23e8a54b'/></svg>">
+<style>
+:root{--ink:#efe6d6;--dim:#b9ad98;--amber:#e8a54b;--teal:#10282b;--panel:rgba(12,28,30,.86)}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#071315;color:var(--ink);font-family:Georgia,"Iowan Old Style","Palatino Linotype",serif}
+#bg{position:fixed;inset:0;background-size:cover;background-position:center;transition:opacity 1.2s ease;filter:saturate(.95)}
+#bg2{position:fixed;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease}
+#vignette{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 35%,rgba(0,0,0,0) 30%,rgba(3,10,11,.75) 100%);pointer-events:none}
+canvas#rain{position:fixed;inset:0;pointer-events:none;opacity:.55}
+main{position:relative;min-height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding:20px}
+.card{width:min(760px,100%);background:var(--panel);border:1px solid rgba(232,165,75,.25);border-radius:14px;padding:26px 30px 22px;backdrop-filter:blur(6px);box-shadow:0 20px 60px rgba(0,0,0,.5);margin-bottom:2vh}
+.time{font:600 13px/1 ui-monospace,Menlo,monospace;letter-spacing:.18em;color:var(--amber);margin-bottom:14px;display:flex;justify-content:space-between}
+.time span+span{color:var(--dim);letter-spacing:.1em}
+p{font-size:clamp(16px,2.1vw,19px);line-height:1.6;margin:0 0 .85em;opacity:0;transform:translateY(6px);transition:opacity .7s,transform .7s}
+p.on{opacity:1;transform:none}
+em{color:#f3d9a8}
+b{color:var(--amber);font-weight:600}
+.choices{display:flex;flex-direction:column;gap:9px;margin-top:16px}
+button.c{all:unset;cursor:pointer;padding:12px 16px;border-radius:9px;border:1px solid rgba(232,165,75,.35);background:rgba(232,165,75,.06);font-size:clamp(15px,1.9vw,17px);line-height:1.4;opacity:0;transition:opacity .6s,background .2s,border-color .2s}
+button.c.on{opacity:1}
+button.c:hover,button.c:focus-visible{background:rgba(232,165,75,.18);border-color:var(--amber)}
+button.c .k{display:inline-block;width:1.6em;color:var(--amber);font-family:ui-monospace,Menlo,monospace;font-size:.85em}
+button.c.locked{cursor:not-allowed;color:#857c6e;border-style:dashed;background:none}
+button.c.locked small{display:block;font-size:.8em;margin-top:4px;color:#8f8573;font-style:italic}
+#title{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;background:linear-gradient(rgba(5,14,15,.25),rgba(5,14,15,.75))}
+#title h1{font-size:clamp(46px,10vw,110px);letter-spacing:.14em;margin:0;font-weight:400;color:var(--ink);text-shadow:0 4px 30px rgba(0,0,0,.6)}
+#title .sub{font-size:clamp(15px,2.2vw,20px);color:#f3d9a8;margin:12px 0 30px;font-style:italic}
+#title button{all:unset;cursor:pointer;padding:14px 34px;border:1px solid var(--amber);border-radius:999px;color:var(--amber);letter-spacing:.2em;font:600 14px ui-monospace,Menlo,monospace}
+#title button:hover{background:rgba(232,165,75,.15)}
+#title .meta{margin-top:24px;color:var(--dim);font-size:13px;line-height:1.7}
+#hud{position:fixed;top:12px;right:14px;display:flex;gap:8px;z-index:5}
+#hud button{all:unset;cursor:pointer;font:12px ui-monospace,Menlo,monospace;color:var(--dim);padding:6px 10px;border:1px solid rgba(255,255,255,.15);border-radius:6px;background:rgba(0,0,0,.35)}
+#hud button:hover{color:var(--ink)}
+#ledger{position:fixed;top:0;right:0;bottom:0;width:min(380px,92vw);background:#efe4cc;color:#2b2318;padding:28px 26px;transform:translateX(105%);transition:transform .45s;z-index:6;overflow:auto;font-family:"Courier New",monospace;box-shadow:-10px 0 40px rgba(0,0,0,.5)}
+#ledger.open{transform:none}
+#ledger h2{font:700 15px "Courier New",monospace;letter-spacing:.2em;border-bottom:2px solid #2b2318;padding-bottom:8px}
+#ledger .row{border-bottom:1px dashed #b3a27f;padding:8px 0;font-size:13px;line-height:1.45}
+#ledger .row i{color:#7a5d2c}
+.endtag{font:600 12px ui-monospace,Menlo,monospace;letter-spacing:.25em;color:var(--amber);border:1px solid var(--amber);display:inline-block;padding:5px 10px;border-radius:4px;margin-bottom:12px}
+.endings{font:12px ui-monospace,Menlo,monospace;color:var(--dim);margin-top:10px}
+@media (max-width:600px){.card{padding:20px 18px 16px}}
+</style>
+</head>
+<body>
+<div id="bg"></div><div id="bg2"></div><div id="vignette"></div><canvas id="rain"></canvas>
+<div id="hud"><button id="snd" title="Sound">sound: on</button><button id="led" title="Ledger (L)">ledger</button></div>
+<aside id="ledger" aria-label="Ledger"><h2>KESTREL HALT · LOST PROPERTY</h2><div id="rows"></div><p style="opacity:1;font-size:12px;margin-top:18px;color:#7a5d2c">Press L or tap "ledger" to close.</p></aside>
+<main id="main"></main>
+<div id="title">
+  <h1>UNCLAIMED</h1>
+  <div class="sub">One night at the lost property office of a very small station.</div>
+  <button id="begin">BEGIN THE NIGHT</button>
+  <div class="meta">~10 minutes · 3 endings · sound recommended<br>keys 1–3 to choose · L for the ledger</div>
+  <div class="meta" id="found"></div>
+</div>
+<script src="story.js"></script>
+<script>
+(() => {
+const S = window.STORY;
+const LEDGER_TEXT = {
+  mitten:"Mitten, red, child's, single.", umbrella:"Umbrella, green, 1 rib broken.", letter:"Envelope, unposted, very old.",
+  tape:"Cassette, blue case, 'FOR THE DRIVE'.", ring:"Ring, gold, plain.", dog:"Dog, brown, no collar.", train:"Suitcase, brown leather, initialled."
+};
+let st;
+const $ = (id) => document.getElementById(id);
+const main = $("main");
+const endsKey = "unclaimed-endings";
+const ends = () => JSON.parse(localStorage.getItem(endsKey) || "[]");
+function showFound(){ const e = ends(); $("found").textContent = e.length ? `Endings found: ${e.length}/3 — ${e.join(" · ")}` : ""; }
+showFound();
+
+// preload images
+const IMGS = ["00-office","01-mitten","02-umbrella","03-letter","04-tape","05-ring","06-dog","07-suitcase","08-key","09-dawn","09-board","09-board-dog","10-office","11-road"];
+IMGS.forEach(i => { const im = new Image(); im.src = `img/${i}.jpg`; });
+let front = $("bg"), back = $("bg2");
+function setBg(name){
+  const url = `url(img/${name}.jpg)`;
+  if (front.style.backgroundImage === url) return;
+  back.style.backgroundImage = url; back.style.opacity = 1; front.style.opacity = 0;
+  [front, back] = [back, front];
+}
+setBg("00-office");
+
+function reset(){ st = { W:0, T:0, H:0, f:{}, log:[] }; $("rows").innerHTML = ""; }
+
+function addLedger(node, choiceText){
+  const item = LEDGER_TEXT[node]; if (!item) return;
+  const r = document.createElement("div"); r.className = "row";
+  r.innerHTML = `${S[node].time} — ${item}<br><i>${choiceText.replace(/<[^>]+>/g,"")}</i>`;
+  $("rows").appendChild(r);
+}
+
+let timers = [];
+function render(id){
+  timers.forEach(clearTimeout); timers = [];
+  const n = S[id];
+  setBg(typeof n.img === "function" ? n.img(st) : n.img);
+  const paras = (typeof n.text === "function" ? n.text(st) : n.text).filter(Boolean);
+  const card = document.createElement("div"); card.className = "card";
+  card.innerHTML = `<div class="time"><span>${n.time}</span><span>KESTREL HALT</span></div>` +
+    (n.ending ? `<div class="endtag">ENDING · ${n.ending}</div>` : "");
+  main.innerHTML = ""; main.appendChild(card);
+  let delay = 150;
+  paras.forEach(t => {
+    const p = document.createElement("p"); p.innerHTML = t; card.appendChild(p);
+    timers.push(setTimeout(() => p.classList.add("on"), delay));
+    delay += Math.min(1400, 350 + t.length * 6);
+  });
+  const box = document.createElement("div"); box.className = "choices"; card.appendChild(box);
+  const live = [];
+  n.choices.forEach((c, i) => {
+    const b = document.createElement("button"); b.className = "c";
+    const ok = !c.need || c.need(st);
+    b.innerHTML = `<span class="k">${i+1}</span>${c.t}` + (ok ? "" : `<small>${c.lock}</small>`);
+    if (!ok) { b.classList.add("locked"); b.setAttribute("aria-disabled","true"); }
+    else { b.onclick = () => choose(id, c); live[i] = b; }
+    box.appendChild(b);
+    timers.push(setTimeout(() => b.classList.add("on"), delay + i * 120));
+  });
+  card.querySelectorAll("p").forEach(p => p.addEventListener("click", () => card.querySelectorAll("p,button.c").forEach(x => x.classList.add("on"))));
+  keyHandler = (k) => { const b = live[k-1]; if (b) b.click(); };
+  if (n.ending) {
+    const e = ends(); if (!e.includes(n.ending)) { e.push(n.ending); localStorage.setItem(endsKey, JSON.stringify(e)); }
+    const d = document.createElement("div"); d.className = "endings";
+    d.textContent = `Endings found: ${ends().length}/3`; card.appendChild(d);
+    Audio2.chord(true);
+  }
+  window.scrollTo(0, document.body.scrollHeight);
+}
+let keyHandler = () => {};
+function choose(from, c){
+  Audio2.chime();
+  if (c.fx) for (const k in c.fx) st[k] += c.fx[k];
+  if (c.set) st.f[c.set] = true;
+  addLedger(from, c.t);
+  if (c.go === "__restart") { reset(); showFound(); $("title").style.display = "flex"; setBg("00-office"); main.innerHTML = ""; return; }
+  render(c.go);
+}
+document.addEventListener("keydown", (e) => {
+  if ($("title").style.display !== "none" && (e.key === "Enter" || e.key === " ")) { $("begin").click(); return; }
+  if (e.key === "l" || e.key === "L") $("ledger").classList.toggle("open");
+  const k = parseInt(e.key, 10); if (k >= 1 && k <= 3) keyHandler(k);
+});
+$("led").onclick = () => $("ledger").classList.toggle("open");
+$("begin").onclick = () => { Audio2.start(); $("title").style.display = "none"; reset(); render("start"); };
+
+// ---------- rain canvas ----------
+const cv = $("rain"), cx = cv.getContext("2d"); let drops = [];
+function rs(){ cv.width = innerWidth; cv.height = innerHeight; drops = Array.from({length: Math.round(innerWidth/6)}, () => ({x:Math.random()*cv.width, y:Math.random()*cv.height, v:8+Math.random()*8, l:8+Math.random()*14})); }
+addEventListener("resize", rs); rs();
+let raining = true;
+(function loop(){
+  cx.clearRect(0,0,cv.width,cv.height);
+  if (raining) { cx.strokeStyle = "rgba(200,220,225,.35)"; cx.lineWidth = 1; cx.beginPath();
+    for (const d of drops) { cx.moveTo(d.x, d.y); cx.lineTo(d.x - d.l*.15, d.y + d.l); d.y += d.v; d.x -= d.v*.15; if (d.y > cv.height) { d.y = -20; d.x = Math.random()*cv.width*1.1; } }
+    cx.stroke(); }
+  requestAnimationFrame(loop);
+})();
+const _render = render;
+render = function(id){ raining = !["dawn","end_claimed","end_ledger","end_stay"].includes(id); Audio2.rain(raining); _render(id); };
+
+// ---------- procedural audio (WebAudio, no samples) ----------
+const Audio2 = (() => {
+  let ac, master, rainGain, on = true, started = false;
+  function start(){
+    if (started) return; started = true;
+    ac = new (window.AudioContext || window.webkitAudioContext)();
+    master = ac.createGain(); master.gain.value = .8; master.connect(ac.destination);
+    // rain: filtered noise
+    const len = ac.sampleRate * 2, buf = ac.createBuffer(1, len, ac.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = Math.random()*2-1;
+    const src = ac.createBufferSource(); src.buffer = buf; src.loop = true;
+    const bp = ac.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 1400; bp.Q.value = .5;
+    const lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 5000;
+    rainGain = ac.createGain(); rainGain.gain.value = .12;
+    src.connect(bp).connect(lp).connect(rainGain).connect(master); src.start();
+    // slow pad: a few soft sine notes drifting, D minor-ish
+    const notes = [146.83,174.61,220,261.63,293.66,349.23];
+    function pad(){
+      if (!on) { setTimeout(pad, 3000); return; }
+      const f = notes[Math.floor(Math.random()*notes.length)];
+      tone(f, .035, 6 + Math.random()*3);
+      setTimeout(pad, 2600 + Math.random()*3200);
+    }
+    pad();
+  }
+  function tone(f, vol, dur, type="sine"){
+    if (!ac) return;
+    const o = ac.createOscillator(), g = ac.createGain(); o.type = type; o.frequency.value = f;
+    const t = ac.currentTime; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + dur*.3); g.gain.linearRampToValueAtTime(0, t + dur);
+    o.connect(g).connect(master); o.start(t); o.stop(t + dur + .1);
+  }
+  return {
+    start,
+    chime(){ tone(880, .05, 1.4, "triangle"); tone(1318.5, .025, 1.8); },
+    chord(){ [293.66, 369.99, 440, 587.33].forEach((f,i) => setTimeout(() => tone(f, .05, 5), i*220)); },
+    rain(r){ if (rainGain) rainGain.gain.linearRampToValueAtTime(r ? .12 : .015, ac.currentTime + 3); },
+    toggle(){ on = !on; if (master) master.gain.value = on ? .8 : 0; return on; }
+  };
+})();
+$("snd").onclick = () => { $("snd").textContent = "sound: " + (Audio2.toggle() ? "on" : "off"); };
+})();
+</script>
+</body>
+</html>
