@@ -18,6 +18,7 @@ window.STORY = {
   },
 
   mitten: {
+    voice: "m-mitten",
     img: "01-mitten", time: "23:58",
     text: [
       "The first thing tonight is small enough to sit in your palm: one red mitten, hand-knitted, a little felted at the thumb. Someone found it under the bench on the platform.",
@@ -32,6 +33,7 @@ window.STORY = {
   },
 
   umbrella: {
+    voice: "m-umbrella",
     img: "02-umbrella", time: "00:21",
     text: [
       "A knock on the glass. An old man, soaked despite his hat, already apologising.",
@@ -70,6 +72,7 @@ window.STORY = {
   },
 
   letter_open: {
+    voice: "m-letter",
     img: "03-letter", time: "00:52",
     text: [
       "One page. The handwriting slants to the right and loops its g's.",
@@ -80,6 +83,7 @@ window.STORY = {
   },
 
   tape: {
+    voice: "m-tape",
     img: "04-tape", time: "01:13",
     text: [
       "A young woman, breathless, backpack streaming water. \"Please tell me someone handed in a cassette. Blue case. It says FOR THE DRIVE.\"",
@@ -113,6 +117,7 @@ window.STORY = {
   },
 
   ring: {
+    voice: "m-ring",
     img: "05-ring", time: "01:41",
     text: [
       "The ticket machine on the platform has been beeping. In its coin tray: a gold wedding ring, still warm.",
@@ -160,6 +165,7 @@ window.STORY = {
   },
 
   suitcase: {
+    voice: "m-suitcase",
     img: "08-key", time: "02:31",
     text: (s) => [
       "Inside: folded shirts you remember buying. A photograph of a small house with a blue door. A brass key on a paper tag, and on the tag, in your handwriting: <em>back soon</em>.",
@@ -195,6 +201,7 @@ window.STORY = {
   },
 
   end_claimed: {
+    voice: "e-claimed",
     img: (s) => s.f.dog ? "09-board-dog" : "09-board", time: "05:53", ending: "CLAIMED",
     text: (s) => [
       "You leave the ledger open at tonight's page and put the key in your pocket.",
@@ -206,6 +213,7 @@ window.STORY = {
   },
 
   end_ledger: {
+    voice: "e-ledger",
     img: "11-road", time: "05:58", ending: "THE TRUE ENTRY",
     text: (s) => [
       "You don't get on the train. You don't stay either. You pick up the pen and write, in the next empty line of the ledger:",
@@ -218,6 +226,7 @@ window.STORY = {
   },
 
   end_stay: {
+    voice: "e-stay",
     img: "10-office", time: "06:10", ending: "THE NIGHT WINDOW",
     text: (s) => [
       "The doors close. The train goes on without you, and you are surprised by how little it hurts.",

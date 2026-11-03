@@ -7,6 +7,6 @@ how your own night ends.
 Play: https://arnavjhajharia.github.io/unclaimed/
 
 - Writing, code and procedural audio are original. The audio is synthesised live with WebAudio: no samples.
-- AI disclosure: the scene illustrations were generated with Higgsfield (gpt_image_2_5) from original prompts, and the
-  code was written with help from Claude.
+- AI disclosure: Higgsfield (GPT Image 2.5) generated the scene illustrations from original prompts. The voiced
+  memories are ElevenLabs text-to-speech, run through Higgsfield. Claude helped write the code.
 - Plain HTML/JS. No build step and no tracking. Your endings are saved in localStorage.

@@ -61,7 +61,7 @@ img.art{display:none}
   <h1>UNCLAIMED</h1>
   <div class="sub">One night at the lost property office of a very small station.</div>
   <button id="begin">BEGIN THE NIGHT</button>
-  <div class="meta">~10 minutes · 3 endings · sound recommended<br>keys 1–3 to choose · L for the ledger</div>
+  <div class="meta">~10 minutes · 3 endings · headphones recommended (voiced memories)<br>keys 1–3 to choose · L for the ledger</div>
   <div class="meta" id="found"></div>
 </div>
 <script src="story.js"></script>
@@ -131,6 +131,7 @@ function render(id){
   });
   card.querySelectorAll("p").forEach(p => p.addEventListener("click", () => card.querySelectorAll("p,button.c").forEach(x => x.classList.add("on"))));
   keyHandler = (k) => { const b = live[k-1]; if (b) b.click(); };
+  if (n.voice) Audio2.voice(n.voice, n.ending ? 3500 : 1800);
   if (n.ending) {
     const e = ends(); if (!e.includes(n.ending)) { e.push(n.ending); localStorage.setItem(endsKey, JSON.stringify(e)); }
     const d = document.createElement("div"); d.className = "endings";
@@ -141,7 +142,7 @@ function render(id){
 }
 let keyHandler = () => {};
 function choose(from, c){
-  Audio2.chime();
+  Audio2.stopVoice(); Audio2.chime();
   if (c.fx) for (const k in c.fx) st[k] += c.fx[k];
   if (c.set) st.f[c.set] = true;
   addLedger(from, c.t);
@@ -202,12 +203,23 @@ const Audio2 = (() => {
     const t = ac.currentTime; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + dur*.3); g.gain.linearRampToValueAtTime(0, t + dur);
     o.connect(g).connect(master); o.start(t); o.stop(t + dur + .1);
   }
+  let vEl = null, vTimer = null;
+  function voice(name, delay){
+    if (vEl) { vEl.pause(); vEl = null; } clearTimeout(vTimer);
+    if (!on || !started) return;
+    vTimer = setTimeout(() => {
+      vEl = new Audio(`audio/${name}.mp3`); vEl.volume = 0.95;
+      if (rainGain) rainGain.gain.linearRampToValueAtTime(.05, ac.currentTime + .8);
+      vEl.onended = () => { if (rainGain && raining) rainGain.gain.linearRampToValueAtTime(.12, ac.currentTime + 2); };
+      vEl.play().catch(() => {});
+    }, delay);
+  }
   return {
-    start,
+    start, voice, stopVoice(){ if (vEl) vEl.pause(); clearTimeout(vTimer); },
     chime(){ tone(880, .05, 1.4, "triangle"); tone(1318.5, .025, 1.8); },
     chord(){ [293.66, 369.99, 440, 587.33].forEach((f,i) => setTimeout(() => tone(f, .05, 5), i*220)); },
     rain(r){ if (rainGain) rainGain.gain.linearRampToValueAtTime(r ? .12 : .015, ac.currentTime + 3); },
-    toggle(){ on = !on; if (master) master.gain.value = on ? .8 : 0; return on; }
+    toggle(){ on = !on; if (master) master.gain.value = on ? .8 : 0; if (!on && vEl) vEl.pause(); return on; }
   };
 })();
 $("snd").onclick = () => { $("snd").textContent = "sound: " + (Audio2.toggle() ? "on" : "off"); };
