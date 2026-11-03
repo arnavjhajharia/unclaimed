@@ -83,7 +83,9 @@ showFound();
 
 // preload images
 const IMGS = ["00-office","01-mitten","02-umbrella","03-letter","04-tape","05-ring","06-dog","07-suitcase","08-key","09-dawn","09-board","09-board-dog","10-office","11-road"];
-IMGS.forEach(i => { const im = new Image(); im.src = `img/${i}.jpg`; });
+// title image first; the other 13 (~4.5 MB) start only once it has landed, so they don't compete with it
+{ const first = new Image(); let go = false; const rest = () => { if (go) return; go = true; IMGS.slice(1).forEach(i => { const im = new Image(); im.src = `img/${i}.jpg`; }); };
+  first.onload = first.onerror = rest; setTimeout(rest, 4000); first.src = `img/${IMGS[0]}.jpg`; }
 let front = $("bg"), back = $("bg2");
 function setBg(name){
   const url = `url(img/${name}.jpg)`;
