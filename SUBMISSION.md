@@ -30,6 +30,22 @@ with keyboard or touch, and its rain-and-piano ambience is synthesised live in W
 - Claude (Anthropic): co-wrote the code and helped draft the story.
 - No third-party IP, no real people, and no samples. The music and ambience are procedural code.
 
-**Optional extra entry: Behind-The-Scenes, Game Division ($3.5k).** A 60-90 s screen recording of the making-of (prompt
-sheet → contact sheet of 16 renders → the 3 regenerated continuity fixes → branch graph of 435 paths → final) would be
-a separate, different project. That entry is not built yet.
+## Second entry: Behind-The-Scenes, Game Division ($2k/$1k/$500). Submit it as a SEPARATE project.
+
+| Field | Value |
+|---|---|
+| Division / Category | Behind-The-Scenes → **Behind-The-Scenes: Game Division** |
+| Title | Behind the scenes: Unclaimed (one reusable style line, 435 tested branches) |
+| Public link | https://arnavjhajharia.github.io/unclaimed/bts/ |
+| Download link | https://arnavjhajharia.github.io/unclaimed/bts/unclaimed-behind-the-scenes.mp4 (3:26, 1920x1080, English narration) |
+| Thumbnail | https://arnavjhajharia.github.io/unclaimed/bts/thumb.jpg |
+
+**Description:** A 3.5-minute walkthrough of how the Interactive Narrative entry "Unclaimed" was made. It covers: constraints
+first; a story graph whose endings are gated on hidden values; one reusable art-style line that keeps 12 generations consistent;
+checking each image against the text (with before/after continuity fixes); a script that tests all 435 branches; two layers of
+sound (procedural WebAudio plus ElevenLabs-voiced memories); and scripted gameplay capture with offline audio. Each step is
+something viewers can reuse in their own projects.
+
+**AI disclosure:** The narration is ElevenLabs TTS (via Higgsfield). The slides are HTML rendered in headless Chrome. The
+illustrations shown are Higgsfield GPT Image 2.5. The game and the pipeline were built by AI agents (Claude) that the owner
+set up; say so plainly. Tool tags: ElevenLabs, Higgsfield.

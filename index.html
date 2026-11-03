@@ -64,7 +64,7 @@ img.art{display:none}
   <div class="meta">~10 minutes · 3 endings · headphones recommended (voiced memories)<br>keys 1–3 to choose · L for the ledger</div>
   <div class="meta" id="found"></div>
 </div>
-<script src="story.js?v=3"></script>
+<script src="story.js?v=4"></script>
 <script>
 (() => {
 const S = window.STORY;
@@ -135,7 +135,10 @@ function render(id){
   if (n.ending) {
     const e = ends(); if (!e.includes(n.ending)) { e.push(n.ending); localStorage.setItem(endsKey, JSON.stringify(e)); }
     const d = document.createElement("div"); d.className = "endings";
-    d.textContent = `Endings found: ${ends().length}/3`; card.appendChild(d);
+    const HINTS = { "CLAIMED": "give more than you keep", "THE TRUE ENTRY": "look at what the objects show you, and say it", "THE NIGHT WINDOW": "hold on to things" };
+    const missing = Object.keys(HINTS).filter(k => !ends().includes(k));
+    d.innerHTML = `Endings found: ${ends().length}/3` + (missing.length ? `<br>Other doors: ${missing.map(k => `<i>${k.toLowerCase()}</i> (${HINTS[k]})`).join(" · ")}` : "<br>You have found every way out of Kestrel Halt. Thank you for minding the window.");
+    card.appendChild(d);
     Audio2.chord(true);
   }
   window.scrollTo(0, 0);
