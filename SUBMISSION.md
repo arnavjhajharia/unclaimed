@@ -29,6 +29,7 @@ with keyboard or touch, and its rain-and-piano ambience is synthesised live in W
   ~1.6 min of speech, voice "Helena"). Tool tag: ElevenLabs. Proof: the Higgsfield generation history shows variant=elevenlabs.
 - Claude (Anthropic): co-wrote the code and helped draft the story.
 - No third-party IP, no real people, and no samples. The music and ambience are procedural code.
+- [OWNER: add one line in your own words on your real role (story direction, choices, edits). The category requires "human-led storytelling" (scout s23). Keep it true.]
 
 ## Second entry: Behind-The-Scenes, Game Division ($2k/$1k/$500). Submit it as a SEPARATE project.
 
