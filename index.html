@@ -48,7 +48,8 @@ button.c.locked small{display:block;font-size:.8em;margin-top:4px;color:#8f8573;
 #ledger .row i{color:#7a5d2c}
 .endtag{font:600 12px ui-monospace,Menlo,monospace;letter-spacing:.25em;color:var(--amber);border:1px solid var(--amber);display:inline-block;padding:5px 10px;border-radius:4px;margin-bottom:12px}
 .endings{font:12px ui-monospace,Menlo,monospace;color:var(--dim);margin-top:10px}
-@media (max-width:600px){.card{padding:20px 18px 16px}}
+img.art{display:none}
+@media (max-width:700px),(max-height:560px){img.art{display:block;width:calc(100% + 36px);margin:-20px -18px 14px;border-radius:14px 14px 0 0;aspect-ratio:16/9;object-fit:cover}.card{padding:20px 18px 16px;margin-top:44px}#bg,#bg2{filter:blur(6px) brightness(.6)}}
 </style>
 </head>
 <body>
@@ -107,7 +108,8 @@ function render(id){
   setBg(typeof n.img === "function" ? n.img(st) : n.img);
   const paras = (typeof n.text === "function" ? n.text(st) : n.text).filter(Boolean);
   const card = document.createElement("div"); card.className = "card";
-  card.innerHTML = `<div class="time"><span>${n.time}</span><span>KESTREL HALT</span></div>` +
+  const imgName = typeof n.img === "function" ? n.img(st) : n.img;
+  card.innerHTML = `<img class="art" alt="" src="img/${imgName}.jpg">` + `<div class="time"><span>${n.time}</span><span>KESTREL HALT</span></div>` +
     (n.ending ? `<div class="endtag">ENDING · ${n.ending}</div>` : "");
   main.innerHTML = ""; main.appendChild(card);
   let delay = 150;
