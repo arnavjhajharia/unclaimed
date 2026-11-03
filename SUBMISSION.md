@@ -22,6 +22,16 @@ the truth, or keep it. A hidden ledger tracks your warmth, honesty and how much 
 opens its doors, and which ways out are open to you depends on how you spent the night. The game plays in the browser
 with keyboard or touch, and its rain-and-piano ambience is synthesised live in WebAudio.
 
+**Why it fits "Interactive Narrative"** (paste after the description if there is room). These follow the category page's
+three judging headings (chromaawards.com/prizes/game-interactive-narrative-presented-by-pickford, checked 2026-11-03):
+- Story & choice: one night, one clerk, six lost objects, and each has a voiced memory. At every object you choose to
+  return it, tell the truth or keep it, and the clerk's own 31-year story comes out through those choices.
+- Player agency: a hidden ledger (warmth, truth, holding on) changes later lines and decides which of the 3 endings
+  are open at 05:52. Locked exits are shown with the reason ("You've kept too much tonight"), so the player sees that
+  their choices mattered and knows what to try on a replay.
+- Craft: 14 illustrated scenes in one consistent style, 9 voiced passages, and live rain-and-piano ambience.
+  Keyboard or touch, with phone layouts checked at 390x844.
+
 **AI tools / disclosure (paste in the tools/notes field):**
 - Higgsfield (GPT Image 2.5 model): all 14 scene illustrations, from original prompts with one shared style line for
   consistency. About 4 credits in total.
