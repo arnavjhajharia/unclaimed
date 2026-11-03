@@ -64,7 +64,7 @@ img.art{display:none}
   <div class="meta">~10 minutes · 3 endings · headphones recommended (voiced memories)<br>keys 1–3 to choose · L for the ledger</div>
   <div class="meta" id="found"></div>
 </div>
-<script src="story.js?v=2"></script>
+<script src="story.js?v=3"></script>
 <script>
 (() => {
 const S = window.STORY;
@@ -203,23 +203,33 @@ const Audio2 = (() => {
     const t = ac.currentTime; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + dur*.3); g.gain.linearRampToValueAtTime(0, t + dur);
     o.connect(g).connect(master); o.start(t); o.stop(t + dur + .1);
   }
-  let vEl = null, vTimer = null;
+  let vSrc = null, vTimer = null; const vCache = {};
+  function loadVoice(name){
+    if (!vCache[name]) vCache[name] = fetch(`audio/${name}.mp3`).then(r => r.arrayBuffer()).then(b => new Promise((res, rej) => ac.decodeAudioData(b, res, rej)));
+    return vCache[name];
+  }
+  function stopV(){ clearTimeout(vTimer); if (vSrc) { try { vSrc.stop(); } catch {} vSrc = null; } }
   function voice(name, delay){
-    if (vEl) { vEl.pause(); vEl = null; } clearTimeout(vTimer);
+    stopV();
     if (!on || !started) return;
-    vTimer = setTimeout(() => {
-      vEl = new Audio(`audio/${name}.mp3`); vEl.volume = 0.95;
+    const buf = loadVoice(name);
+    vTimer = setTimeout(async () => {
+      let b; try { b = await buf; } catch { return; }
+      if (!on) return;
+      if (ac.state === "suspended") { try { await ac.resume(); } catch {} }
+      const src = ac.createBufferSource(), g = ac.createGain(); g.gain.value = 1.1; src.buffer = b;
+      src.connect(g).connect(master); vSrc = src;
       if (rainGain) rainGain.gain.linearRampToValueAtTime(.05, ac.currentTime + .8);
-      vEl.onended = () => { if (rainGain && raining) rainGain.gain.linearRampToValueAtTime(.12, ac.currentTime + 2); };
-      vEl.play().catch(() => {});
+      src.onended = () => { if (vSrc === src) vSrc = null; if (rainGain && raining) rainGain.gain.linearRampToValueAtTime(.12, ac.currentTime + 2); };
+      src.start();
     }, delay);
   }
   return {
-    start, voice, stopVoice(){ if (vEl) vEl.pause(); clearTimeout(vTimer); },
+    start, voice, stopVoice: stopV,
     chime(){ tone(880, .05, 1.4, "triangle"); tone(1318.5, .025, 1.8); },
     chord(){ [293.66, 369.99, 440, 587.33].forEach((f,i) => setTimeout(() => tone(f, .05, 5), i*220)); },
     rain(r){ if (rainGain) rainGain.gain.linearRampToValueAtTime(r ? .12 : .015, ac.currentTime + 3); },
-    toggle(){ on = !on; if (master) master.gain.value = on ? .8 : 0; if (!on && vEl) vEl.pause(); return on; }
+    toggle(){ on = !on; if (master) master.gain.value = on ? .8 : 0; if (!on) stopV(); return on; }
   };
 })();
 $("snd").onclick = () => { $("snd").textContent = "sound: " + (Audio2.toggle() ? "on" : "off"); };
