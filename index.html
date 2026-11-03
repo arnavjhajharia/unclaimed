@@ -45,6 +45,8 @@ button.c.locked small{display:block;font-size:.8em;margin-top:4px;color:#8f8573;
 @media (pointer:coarse){#hud button{padding:14px}.kbd{display:none}}
 #ledger{position:fixed;top:0;right:0;bottom:0;width:min(380px,92vw);background:#efe4cc;color:#2b2318;padding:28px 26px;transform:translateX(105%);transition:transform .45s;z-index:6;overflow:auto;font-family:"Courier New",monospace;box-shadow:-10px 0 40px rgba(0,0,0,.5)}
 #ledger.open{transform:none}
+#ledx{all:unset;cursor:pointer;position:absolute;top:10px;right:10px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;font:700 18px "Courier New",monospace;color:#2b2318;border:1px solid #b3a27f;border-radius:8px}
+#ledger h2{padding-right:48px}
 #ledger h2{font:700 15px "Courier New",monospace;letter-spacing:.2em;border-bottom:2px solid #2b2318;padding-bottom:8px}
 #ledger .row{border-bottom:1px dashed #b3a27f;padding:8px 0;font-size:13px;line-height:1.45}
 #ledger .row i{color:#7a5d2c}
@@ -57,7 +59,7 @@ img.art{display:none}
 <body>
 <div id="bg"></div><div id="bg2"></div><div id="vignette"></div><canvas id="rain"></canvas>
 <div id="hud"><button id="snd" title="Sound">sound: on</button><button id="led" title="Ledger (L)">ledger</button></div>
-<aside id="ledger" aria-label="Ledger"><h2>KESTREL HALT · LOST PROPERTY</h2><div id="rows"></div><p style="opacity:1;font-size:12px;margin-top:18px;color:#7a5d2c">Press L or tap "ledger" to close.</p></aside>
+<aside id="ledger" aria-label="Ledger"><button id="ledx" aria-label="Close the ledger">✕</button><h2>KESTREL HALT · LOST PROPERTY</h2><div id="rows"></div><p style="opacity:1;font-size:12px;margin-top:18px;color:#7a5d2c">Press L or tap ✕ to close.</p></aside>
 <main id="main"></main>
 <div id="title">
   <h1>UNCLAIMED</h1>
@@ -164,6 +166,10 @@ document.addEventListener("keydown", (e) => {
   const k = parseInt(e.key, 10); if (k >= 1 && k <= 3) keyHandler(k);
 });
 $("led").onclick = () => $("ledger").classList.toggle("open");
+$("ledx").onclick = () => $("ledger").classList.remove("open");
+// the open ledger covers the HUD (and on phones most of the screen): a tap outside it closes it
+// (capture + stop, so that tap only closes the ledger and never also picks a choice hidden behind it)
+document.addEventListener("click", (e) => { const L = $("ledger"); if (L.classList.contains("open") && !L.contains(e.target) && e.target.id !== "led") { L.classList.remove("open"); e.stopPropagation(); e.preventDefault(); } }, true);
 $("title").addEventListener("click", (e) => { if (e.target.id !== "begin" && $("title").style.display !== "none") $("begin").click(); });
 $("begin").onclick = () => { Audio2.start(); $("title").style.display = "none"; reset(); render("start"); };
 
